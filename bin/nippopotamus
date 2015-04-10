@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require "nippopotamus"
+
+Nippopotamus::CLI.start
