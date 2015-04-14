@@ -13,13 +13,18 @@ module Nippopotamus
       PullRequestEvent PullRequestReviewCommentEvent
     )
 
-    @@config = Nippopotamus::Config.new
-    @@client = Octokit::Client.new(access_token: @@config.access_token)
-    @@client.auto_paginate = true
+    def fetch_activities(config)
+      unless config.access_token
+        raise "ENV['NIPPOPOTAMUS_ACCESS_TOKEN'] is required"
+      end
 
-    def fetch_activities(date = Date.today)
-      events = @@client.user_events(@@client.login).select {|e|
-        e.occured_at?(date) and TARGET_EVENTS.member?(e.type)
+      client = Octokit::Client.new(access_token: config.access_token)
+      client.api_endpoint = config.api_endpoint
+      client.auto_paginate = false
+      user = config.user_name || client.login
+
+      events = client.user_events(user).select {|e|
+        e.occured_at?(config.date) and TARGET_EVENTS.member?(e.type)
       }
 
       group_events(events)
