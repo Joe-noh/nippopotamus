@@ -27,4 +27,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest"
 
   spec.add_dependency "thor", "~> 0.19"
+  spec.add_dependency "octokit", "~> 3.8"
 end
